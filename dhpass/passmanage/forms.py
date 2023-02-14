@@ -1,5 +1,6 @@
 from django import forms
 from .models import User
+
 non_allowed_usernames = ['abc']
 
 
@@ -57,7 +58,7 @@ class LoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(
         attrs={
             "class": "form-control"
-    }))
+        }))
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
