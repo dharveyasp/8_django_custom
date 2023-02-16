@@ -4,10 +4,16 @@ from .models import User
 non_allowed_usernames = ['abc']
 
 
-class RegisterForm(forms.Form):
-    username = forms.CharField()
+class RegisterForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', ]
+
+    username = forms.CharField(strip=False)
     email = forms.EmailField()
     password1 = forms.CharField(
+        strip=False,
         label='Password',
         widget=forms.PasswordInput(
             attrs={
@@ -16,6 +22,7 @@ class RegisterForm(forms.Form):
         )
     )
     password2 = forms.CharField(
+        strip=False,
         label='Confirm Password',
         widget=forms.PasswordInput(
             attrs={

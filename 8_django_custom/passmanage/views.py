@@ -1,3 +1,5 @@
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -14,9 +16,11 @@ class Home(generic.TemplateView):
     template_name = 'passmanage/home.html'
 
 
-class Login(generic.FormView):
+class Login(LoginView):
     model = User
-    form_class = LoginForm
+    form_class = AuthenticationForm
+    redirect_authenticated_user = True
+    redirect_field_name = reverse_lazy('home')
     template_name = 'passmanage/login.html'
     success_url = reverse_lazy('home')
 
@@ -31,7 +35,7 @@ class Login(generic.FormView):
     def form_valid(self, form):
         if self.request.user.is_authenticated:
             messages.success(self.request, "You are already logged in as %s " % self.request.user)
-            return redirect(Home)
+            return super().form_valid(form)
         username = form.cleaned_data.get("username")
         password = form.cleaned_data.get("password")
         user = authenticate(self.request, username=username, password=password)
@@ -48,9 +52,9 @@ class Register(generic.TemplateView):
     template_name = 'passmanage/register.html'
 
 
-@login_required()
-class Passwords:
-    pass
+# @login_required()
+class Dashboard(generic.TemplateView):
+    template_name = 'passmanage/dashboard.html'
 
 
 class AddPassword:
